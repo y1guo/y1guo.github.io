@@ -6,7 +6,6 @@ function App() {
     return (
         <div className="app">
             <Navbar />
-            <canvas id="canvas" />
             <Footer />
         </div>
     );

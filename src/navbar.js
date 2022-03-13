@@ -7,7 +7,7 @@ function Navbar() {
                 <div id="name-block">
                     <a href="#home">
                         <div id="name">Yi Guo</div>
-                        <div id="affiliation">PhD, UC San Diego</div>
+                        <div id="affiliation">PhD Student, UC San Diego</div>
                     </a>
                 </div>
                 <div id="menu-block">
