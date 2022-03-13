@@ -1,9 +1,15 @@
-import "./navbar.css";
-
-function Navbar() {
-    return (
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Yi Guo's Homepage</title>
+        <link rel="stylesheet" href="/src/style.css" />
+    </head>
+    <body>
         <nav>
-            <div className="container">
+            <div class="container">
                 <div id="name-block">
                     <a href="#home">
                         <div id="name">Yi Guo</div>
@@ -28,7 +34,11 @@ function Navbar() {
                 </div>
             </div>
         </nav>
-    );
-}
-
-export default Navbar;
+        <canvas id="canvas"></canvas>
+        <footer>
+            <div class="container">
+                <p id="copyright">&copy; 2022 Yi Guo - All rights reserved</p>
+            </div>
+        </footer>
+    </body>
+</html>
