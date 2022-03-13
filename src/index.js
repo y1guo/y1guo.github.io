@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { ContextExclusionPlugin } from "webpack";
 
 const scene = new THREE.Scene();
 
@@ -43,64 +42,66 @@ function createBackground() {
 }
 // createBackground();
 
-// class Star {
-//     constructor(stars) {
-//         const geometry = new THREE.SphereGeometry(0.5, 12, 8);
-//         const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-//         this.star = new THREE.Mesh(geometry, material);
+class Star {
+    constructor(stars) {
+        const geometry = new THREE.SphereGeometry(0.5, 12, 8);
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        this.star = new THREE.Mesh(geometry, material);
 
-//         function getSphericalRandom(r) {
-//             const costheta = 2 * Math.random() - 1;
-//             const sintheta = Math.sqrt(1 - costheta * costheta);
-//             const phi = Math.random() * 2 * Math.PI;
-//             return [
-//                 r * sintheta * Math.cos(phi),
-//                 r * sintheta * Math.sin(phi),
-//                 r * costheta,
-//             ];
-//         }
+        function getSphericalRandom(r) {
+            const costheta = 2 * Math.random() - 1;
+            const sintheta = Math.sqrt(1 - costheta * costheta);
+            const phi = Math.random() * 2 * Math.PI;
+            return [
+                r * sintheta * Math.cos(phi),
+                r * sintheta * Math.sin(phi),
+                r * costheta,
+            ];
+        }
 
-//         const r = THREE.MathUtils.randFloat(50, 200);
-//         const [x, y, z] = getSphericalRandom(r);
+        const r = THREE.MathUtils.randFloat(50, 2000);
+        const [x, y, z] = getSphericalRandom(r);
 
-//         const maxv = Math.sqrt(2 / r) * Math.random();
-//         const [vx, vy, vz] = getSphericalRandom(maxv);
+        const v = Math.sqrt(2 / r) * (0.2 + 0.8 * Math.random());
+        let [vx, vy, vz] = getSphericalRandom(v);
+        if (Math.abs(x * vx + y * vy + z * vz) / (r * v) > 0.9) {
+            [vx, vy, vz] = getSphericalRandom(v);
+        }
 
-//         this.pos = [x, y, z];
-//         this.vel = [vx, vy, vz];
+        this.pos = [x, y, z];
+        this.vel = [vx, vy, vz];
 
-//         this.star.position.set(x, y, z);
-//         scene.add(this.star);
-//         stars.push(this);
-//         console.log(this.pos, this.vel);
-//     }
-//     update(dt) {
-//         dt /= 100;
-//         const [x, y, z] = this.pos;
-//         const [vx, vy, vz] = this.vel;
-//         const r = Math.sqrt(x * x + y * y + z * z);
-//         const factor = -dt / Math.pow(r, 3);
-//         this.vel = [x * factor, y * factor, z * factor];
-//         this.pos = [vx * dt, vy * dt, vz * dt];
-//         this.star.position.set(x, y, z);
-//     }
-// }
-// const stars = [];
-// Array(2)
-//     .fill()
-//     .forEach(() => new Star(stars));
+        this.star.position.set(x, y, z);
+        scene.add(this.star);
+        stars.push(this);
+    }
+    update(dt) {
+        dt /= 100;
+        const [x, y, z] = this.pos;
+        const [vx, vy, vz] = this.vel;
+        const r = Math.sqrt(x * x + y * y + z * z);
+        const factor = -dt / Math.pow(r, 3);
+        this.vel = [vx + x * factor, vy + y * factor, vz + z * factor];
+        this.pos = [x + vx * dt, y + vy * dt, z + vz * dt];
+        this.star.position.set(x, y, z);
+    }
+}
+const stars = [];
+Array(3000)
+    .fill()
+    .forEach(() => new Star(stars));
 
-// let lastTime = 0;
-// function animate(currentTime) {
-//     let deltaTime = currentTime - lastTime;
-//     lastTime = currentTime;
+let lastTime = 0;
+function animate(currentTime) {
+    let deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
 
-//     requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-//     // stars.forEach((star) => star.update(deltaTime));
+    stars.forEach((star) => star.update(deltaTime));
 
-//     controls.update();
+    controls.update();
 
-//     renderer.render(scene, camera);
-// }
-// requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+requestAnimationFrame(animate);
