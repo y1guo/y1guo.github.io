@@ -35,7 +35,7 @@ function createBackground() {
     const geometry = new THREE.SphereGeometry(500, 60, 40);
     geometry.scale(-1, -1, -1);
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("/docs/eso0932a.jpeg");
+    const texture = loader.load("/images/eso0932a.jpeg");
     const material = new THREE.MeshBasicMaterial({ map: texture });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
