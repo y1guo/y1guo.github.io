@@ -63,9 +63,3 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
-
-export default class Scene {
-    constructor() {
-        console.log("Created Scene");
-    }
-}
