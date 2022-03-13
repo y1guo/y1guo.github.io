@@ -10,7 +10,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position.set(0, 0, 1);
+camera.position.set(0, 0, 50);
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.getElementById("canvas"),
@@ -40,12 +40,37 @@ function createBackground() {
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 }
-// createBackground();
+createBackground();
 
 class Star {
     constructor(stars) {
         const geometry = new THREE.SphereGeometry(0.5, 12, 8);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        let red = THREE.MathUtils.randInt(0, 255);
+        let green = THREE.MathUtils.randInt(127, 255);
+        let blue = THREE.MathUtils.randInt(0, 255);
+        while (
+            (1.2 * green > red || 1.2 * green > blue) &&
+            red < 250 &&
+            blue < 250
+        ) {
+            if (red > blue) {
+                red = Math.floor(red / 2 + 127);
+            } else {
+                blue = Math.floor(blue / 2 + 127);
+            }
+        }
+        const color = (red << 16) | (green << 8) | blue;
+        const material = new THREE.MeshBasicMaterial({
+            color: color,
+        });
+        // const loader = new THREE.TextureLoader();
+        // const texture = loader.load("/images/2k_sun.jpeg");
+        // const material = new THREE.MeshLambertMaterial({
+        //     color: color,
+        //     emissive: color,
+        //     emissiveMap: texture,
+        // });
+
         this.star = new THREE.Mesh(geometry, material);
 
         function getSphericalRandom(r) {
@@ -59,14 +84,14 @@ class Star {
             ];
         }
 
-        const r = THREE.MathUtils.randFloat(50, 2000);
+        const r = THREE.MathUtils.randFloat(50, 500);
         const [x, y, z] = getSphericalRandom(r);
 
-        const v = Math.sqrt(2 / r) * (0.2 + 0.8 * Math.random());
+        const v = Math.sqrt(2 / r) * (0.5 + 0.5 * Math.random());
         let [vx, vy, vz] = getSphericalRandom(v);
-        if (Math.abs(x * vx + y * vy + z * vz) / (r * v) > 0.9) {
-            [vx, vy, vz] = getSphericalRandom(v);
-        }
+        // if (Math.abs(x * vx + y * vy + z * vz) / (r * v) > 0.9) {
+        //     [vx, vy, vz] = getSphericalRandom(v);
+        // }
 
         this.pos = [x, y, z];
         this.vel = [vx, vy, vz];
@@ -87,7 +112,7 @@ class Star {
     }
 }
 const stars = [];
-Array(3000)
+Array(1000)
     .fill()
     .forEach(() => new Star(stars));
 
