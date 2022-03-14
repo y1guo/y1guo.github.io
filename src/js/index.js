@@ -35,7 +35,8 @@ function createBackground() {
     const geometry = new THREE.SphereGeometry(500, 60, 40);
     geometry.scale(-1, -1, -1);
     const loader = new THREE.TextureLoader();
-    const texture = loader.load("/images/eso0932a.jpeg");
+    // const texture = loader.load("/images/2k_stars_milky_way.jpeg");
+    const texture = loader.load("/img/eso0932a.jpeg");
     const material = new THREE.MeshBasicMaterial({ map: texture });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
@@ -44,25 +45,25 @@ createBackground();
 
 class Star {
     constructor(stars) {
-        const geometry = new THREE.SphereGeometry(0.5, 12, 8);
-        let red = THREE.MathUtils.randInt(0, 255);
-        let green = THREE.MathUtils.randInt(127, 255);
-        let blue = THREE.MathUtils.randInt(0, 255);
-        while (
-            (1.2 * green > red || 1.2 * green > blue) &&
-            red < 250 &&
-            blue < 250
-        ) {
-            if (red > blue) {
-                red = Math.floor(red / 2 + 127);
-            } else {
-                blue = Math.floor(blue / 2 + 127);
-            }
-        }
-        const color = (red << 16) | (green << 8) | blue;
-        const material = new THREE.MeshBasicMaterial({
-            color: color,
-        });
+        // const geometry = new THREE.SphereGeometry(0.5, 12, 8);
+        // let red = THREE.MathUtils.randInt(0, 255);
+        // let green = THREE.MathUtils.randInt(127, 255);
+        // let blue = THREE.MathUtils.randInt(0, 255);
+        // while (
+        //     (1.2 * green > red || 1.2 * green > blue) &&
+        //     red < 250 &&
+        //     blue < 250
+        // ) {
+        //     if (red > blue) {
+        //         red = Math.floor(red / 2 + 127);
+        //     } else {
+        //         blue = Math.floor(blue / 2 + 127);
+        //     }
+        // }
+        // const color = (red << 16) | (green << 8) | blue;
+        // const material = new THREE.MeshBasicMaterial({
+        //     color: color,
+        // });
         // const loader = new THREE.TextureLoader();
         // const texture = loader.load("/images/2k_sun.jpeg");
         // const material = new THREE.MeshLambertMaterial({
@@ -71,7 +72,24 @@ class Star {
         //     emissiveMap: texture,
         // });
 
-        this.star = new THREE.Mesh(geometry, material);
+        // this.star = new THREE.Mesh(geometry, material);
+
+        const vertices = [];
+
+        for (let i = 0; i < 10000; i++) {
+            const x = THREE.MathUtils.randFloatSpread(2000);
+            const y = THREE.MathUtils.randFloatSpread(2000);
+            const z = THREE.MathUtils.randFloatSpread(2000);
+
+            vertices.push(x, y, z);
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+            "position",
+            new THREE.Float32BufferAttribute(vertices, 3)
+        );
+        const material = new THREE.PointsMaterial({ color: 0xffffff });
+        this.star = new THREE.Points(geometry, material);
 
         function getSphericalRandom(r) {
             const costheta = 2 * Math.random() - 1;
@@ -89,9 +107,6 @@ class Star {
 
         const v = Math.sqrt(2 / r) * (0.5 + 0.5 * Math.random());
         let [vx, vy, vz] = getSphericalRandom(v);
-        // if (Math.abs(x * vx + y * vy + z * vz) / (r * v) > 0.9) {
-        //     [vx, vy, vz] = getSphericalRandom(v);
-        // }
 
         this.pos = [x, y, z];
         this.vel = [vx, vy, vz];
@@ -123,7 +138,7 @@ function animate(currentTime) {
 
     requestAnimationFrame(animate);
 
-    stars.forEach((star) => star.update(deltaTime));
+    // stars.forEach((star) => star.update(deltaTime));
 
     controls.update();
 
