@@ -33,10 +33,10 @@ scene.add(ambientLight);
 
 const vertices = [];
 
-for (let i = 0; i < 1000000; i++) {
-    const x = THREE.MathUtils.randFloatSpread(500);
-    const y = THREE.MathUtils.randFloatSpread(500);
-    const z = THREE.MathUtils.randFloatSpread(500);
+for (let i = 0; i < 10000; i++) {
+    const x = THREE.MathUtils.randFloatSpread(300);
+    const y = THREE.MathUtils.randFloatSpread(300);
+    const z = THREE.MathUtils.randFloatSpread(300);
 
     vertices.push(x, y, z);
 }
@@ -45,7 +45,7 @@ geometry.setAttribute(
     "position",
     new THREE.Float32BufferAttribute(vertices, 3)
 );
-const material = new THREE.PointsMaterial({ color: 0xffffff });
+const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.2 });
 const stars = new THREE.Points(geometry, material);
 scene.add(stars);
 
