@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import NBody from "./nbody";
 
 const scene = new THREE.Scene();
 
@@ -22,83 +23,56 @@ renderer.render(scene, camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// const pointLight = new THREE.PointLight(0xffffff);
-// scene.add(pointLight);
 const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientLight);
 
-// const lightHelper = new THREE.PointLightHelper(pointLight);
-// const gridHelper = new THREE.GridHelper(200, 50);
-// scene.add(lightHelper, gridHelper);
+// add points
+const mass = [];
+const position = [];
+const velocity = [];
 
-const vertices = [];
+for (let i = 0; i < 1000; i++) {
+    const m = 1;
+    const x = THREE.MathUtils.randFloatSpread(100);
+    const y = THREE.MathUtils.randFloatSpread(100);
+    const z = THREE.MathUtils.randFloatSpread(100);
+    const vx = 0;
+    const vy = 0;
+    const vz = 0;
 
-for (let i = 0; i < 10000; i++) {
-    const x = THREE.MathUtils.randFloatSpread(300);
-    const y = THREE.MathUtils.randFloatSpread(300);
-    const z = THREE.MathUtils.randFloatSpread(300);
-
-    vertices.push(x, y, z);
+    mass.push(m);
+    position.push(x, y, z);
+    velocity.push(vx, vy, vz);
 }
+
+const nbody = new NBody(mass, position, velocity);
+
 const geometry = new THREE.BufferGeometry();
 geometry.setAttribute(
     "position",
-    new THREE.Float32BufferAttribute(vertices, 3)
+    new THREE.Float32BufferAttribute(position, 3)
 );
 const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.2 });
 const stars = new THREE.Points(geometry, material);
 scene.add(stars);
 
-// class Star {
-//     constructor(stars) {
-
-//         function getSphericalRandom(r) {
-//             const costheta = 2 * Math.random() - 1;
-//             const sintheta = Math.sqrt(1 - costheta * costheta);
-//             const phi = Math.random() * 2 * Math.PI;
-//             return [
-//                 r * sintheta * Math.cos(phi),
-//                 r * sintheta * Math.sin(phi),
-//                 r * costheta,
-//             ];
-//         }
-
-//         const r = THREE.MathUtils.randFloat(50, 500);
-//         const [x, y, z] = getSphericalRandom(r);
-
-//         const v = Math.sqrt(2 / r) * (0.5 + 0.5 * Math.random());
-//         let [vx, vy, vz] = getSphericalRandom(v);
-
-//         this.pos = [x, y, z];
-//         this.vel = [vx, vy, vz];
-
-//         this.star.position.set(x, y, z);
-//         scene.add(this.star);
-//         stars.push(this);
-//     }
-//     update(dt) {
-//         dt /= 100;
-//         const [x, y, z] = this.pos;
-//         const [vx, vy, vz] = this.vel;
-//         const r = Math.sqrt(x * x + y * y + z * z);
-//         const factor = -dt / Math.pow(r, 3);
-//         this.vel = [vx + x * factor, vy + y * factor, vz + z * factor];
-//         this.pos = [x + vx * dt, y + vy * dt, z + vz * dt];
-//         this.star.position.set(x, y, z);
-//     }
-// }
-
+// animate
 let lastTime = 0;
 function animate(currentTime) {
     let deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    requestAnimationFrame(animate);
-
-    // stars.forEach((star) => star.update(deltaTime));
+    // update stars
+    nbody.update(deltaTime / 1000);
+    const position = stars.geometry.attributes.position.array;
+    for (let i = 0; i < 3 * nbody.num; i++) {
+        position[i] = nbody.pos[i];
+    }
+    stars.geometry.attributes.position.needsUpdate = true;
 
     controls.update();
 
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);

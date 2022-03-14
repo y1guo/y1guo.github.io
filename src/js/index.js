@@ -22,21 +22,14 @@ renderer.render(scene, camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// const pointLight = new THREE.PointLight(0xffffff);
-// scene.add(pointLight);
 const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientLight);
-
-// const lightHelper = new THREE.PointLightHelper(pointLight);
-// const gridHelper = new THREE.GridHelper(200, 50);
-// scene.add(lightHelper, gridHelper);
 
 function createBackground() {
     const geometry = new THREE.SphereGeometry(500, 60, 40);
     geometry.scale(-1, -1, -1);
     const loader = new THREE.TextureLoader();
     const texture = loader.load("/images/2k_stars_milky_way.jpeg");
-    // const texture = loader.load("/images/eso0932a.jpeg");
     const material = new THREE.MeshBasicMaterial({ map: texture });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
